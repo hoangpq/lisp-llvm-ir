@@ -1,0 +1,40 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+
+    <script type="text/javascript">
+
+        let buffer;
+        const importObject = {
+            env: {
+                memory_base: 0,
+                table_base: 0,
+                memory: new WebAssembly.Memory({initial: 256}),
+                table: new WebAssembly.Table({
+                    initial: 0,
+                    element: 'anyfunc',
+                }),
+                printf(index) {},
+                scanf() {}
+            }
+        }
+
+        WebAssembly.instantiateStreaming(
+            fetch('./output.wasm'), importObject
+        ).then((resp) => {
+            const exports = resp.instance.exports;
+            buffer = new Uint8Array(exports.memory.buffer);
+            console.log(exports.main());
+        });
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
